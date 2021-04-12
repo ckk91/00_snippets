@@ -5,6 +5,10 @@
 
 # ===
 set -e  # stop on errors
+set -u  # stop on unset vars
+
+set -euo pipefail  # stop on the above and when pipe fails
+IFS=$'\n\t'  # todo find out wth this is
 
 # === main pattern, prevent exec on sourcing a script
 function main {
@@ -17,7 +21,6 @@ fi
 failing_function || cleanup_failed_function
 
 # === bail early from a function w/ success
-
 function bail_early {
 	test 1 && return 0  # since test is true we exit early 
 }
