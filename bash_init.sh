@@ -3,7 +3,7 @@
 # also some potential repo links for further exploration here:
 # https://github.com/anordal/shellharden/blob/master/how_to_do_things_safely_in_bash.md
 
-# ===
+# === strict mode
 set -e  # stop on errors
 set -u  # stop on unset vars
 
@@ -24,3 +24,17 @@ failing_function || cleanup_failed_function
 function bail_early {
 	test 1 && return 0  # since test is true we exit early 
 }
+
+# === trap handler for strict mode
+
+function finish () {  # this is also exit handler
+    if [ "$1" != "0" ]; then
+		# where's the error?
+		echo "Error $1 on line $2. Recheck your vars."
+		# rollback/cleanup
+    else
+		# all good
+    fi
+}
+
+trap 'finish $? $LINENO' EXIT  
